@@ -1,6 +1,10 @@
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { useState } from "react";
 
 export default function Index() {
+
+  const [mostrarProyecto, setMostrarProyecto] = useState(false);
+
   return (
     <View style={styles.contenedor}>
 
@@ -23,12 +27,19 @@ export default function Index() {
 
       <Pressable
         style={styles.boton}
-        onPress={() => console.log("Ver proyectos")}
+        onPress={() => setMostrarProyecto(true)}
       >
         <Text style={styles.botonTexto}>
           Ver proyectos
         </Text>
       </Pressable>
+
+      {mostrarProyecto && (
+        <Image
+          source={require("../../assets/proyecto.png")}
+          style={styles.imagenProyecto}
+        />
+      )}
 
     </View>
   );
@@ -78,5 +89,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+
+  imagenProyecto: {
+    width: 300,
+    height: 200,
+    marginTop: 20,
+    borderRadius: 10,
   },
 });
