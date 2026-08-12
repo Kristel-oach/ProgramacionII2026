@@ -1,100 +1,125 @@
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
-import { useState } from "react";
+import React from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 export default function Index() {
-
-  const [mostrarProyecto, setMostrarProyecto] = useState(false);
+  const tareas = [
+    'Realizar practica React Native',
+    'Realizar una aplicación educativa',
+    'Realizar una tarjeta de estudiante',
+  ];
 
   return (
-    <View style={styles.contenedor}>
-
-      <Image
-        source={require("../../assets/perfil.jpeg")}
-        style={styles.foto}
-      />
-
-      <Text style={styles.nombre}>
-        Kristel Oneli Alessandra Canás Hernández
-      </Text>
-
-      <Text style={styles.carrera}>
-        Ingeniería en Sistemas
-      </Text>
-
-      <Text style={styles.carnet}>
-        Carné: 0907-25-12846
-      </Text>
-
-      <Pressable
-        style={styles.boton}
-        onPress={() => setMostrarProyecto(true)}
-      >
-        <Text style={styles.botonTexto}>
-          Ver proyectos
+    <ScrollView style={styles.container}>
+      <View style={styles.encabezado}>
+        <Text style={styles.titulo}>
+          Lista de tareas pendientes
         </Text>
-      </Pressable>
 
-      {mostrarProyecto && (
-        <Image
-          source={require("../../assets/proyecto.png")}
-          style={styles.imagenProyecto}
-        />
-      )}
+        <Text style={styles.subtitulo}>
+          Kristel Oneli Alessandra Canás Hernández
+        </Text>
+      </View>
 
-    </View>
+      <View style={styles.lista}>
+        <Text style={styles.tituloLista}>
+          Mis tareas
+        </Text>
+
+        {tareas.map((tarea, index) => (
+          <View
+            key={index}
+            style={styles.tarea}
+          >
+            <View style={styles.numero}>
+              <Text style={styles.numeroTexto}>
+                {index + 1}
+              </Text>
+            </View>
+
+            <Text style={styles.textoTarea}>
+              {tarea}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  contenedor: {
+  container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-    backgroundColor: "#ecc9f2",
+    backgroundColor: '#F3E5F5',
   },
 
-  foto: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 16,
+  encabezado: {
+    backgroundColor: '#1c2f61',
+    padding: 25,
+    borderRadius: 18,
+    margin: 20,
+    alignItems: 'center',
   },
 
-  nombre: {
-    fontSize: 24,
-    fontWeight: "bold",
+  titulo: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginBottom: 8,
   },
 
-  carrera: {
-    fontSize: 16,
-    color: "#555",
-    marginTop: 4,
+  subtitulo: {
+    fontSize: 15,
+    color: '#aabae5',
+    textAlign: 'center',
   },
 
-  carnet: {
-    fontSize: 14,
-    color: "#888",
-    marginTop: 4,
-    marginBottom: 20,
+  lista: {
+    padding: 20,
   },
 
-  boton: {
-    backgroundColor: "#622cad",
-    padding: 12,
-    borderRadius: 8,
+  tituloLista: {
+    fontSize: 23,
+    fontWeight: 'bold',
+    color: '#3c4de1',
+    marginBottom: 15,
   },
 
-  botonTexto: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+  tarea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    borderRadius: 15,
+    marginBottom: 12,
+    borderLeftWidth: 6,
+    borderLeftColor: '#244aaa',
   },
 
-  imagenProyecto: {
-    width: 300,
-    height: 200,
-    marginTop: 20,
-    borderRadius: 10,
+  numero: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#eddff0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+
+  numeroTexto: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#211b9a',
+  },
+
+  textoTarea: {
+    fontSize: 17,
+    color: '#4eade4',
+    flex: 1,
   },
 });
