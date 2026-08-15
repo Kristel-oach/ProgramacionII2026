@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Button,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,8 +16,15 @@ export default function Index() {
     'Realizar una tarjeta de estudiante',
   ]);
 
+ 
   const [nuevaTarea, setNuevaTarea] = useState('');
   const [mostrarInput, setMostrarInput] = useState(false);
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+  const [tareaAEliminar, setTareaAEliminar] = useState<number | null>(null);
+  const nuevaTareaPress = () => {
+    setMostrarInput(true);
+  };
+
 
   const guardarTarea = () => {
     if (nuevaTarea.trim() === '') {
@@ -28,8 +36,32 @@ export default function Index() {
     setMostrarInput(false);
   };
 
+  const confirmarEliminar = (index: number) => {
+    setTareaAEliminar(index);
+    setMostrarConfirmacion(true);
+  };
+
+  const cancelarEliminar = () => {
+    setMostrarConfirmacion(false);
+    setTareaAEliminar(null);
+  };
+
+  const eliminarTarea = () => {
+    if (tareaAEliminar !== null) {
+      setTareas(
+        tareas.filter((_, index) => index !== tareaAEliminar)
+      );
+    }
+
+    setMostrarConfirmacion(false);
+    setTareaAEliminar(null);
+  };
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contenido}
+    >
 
       <View style={styles.encabezado}>
         <Text style={styles.titulo}>
@@ -46,7 +78,7 @@ export default function Index() {
           <Button
             title="＋ Nueva tarea"
             color="#6A1B9A"
-            onPress={() => setMostrarInput(true)}
+            onPress={nuevaTareaPress}
           />
         </View>
       )}
@@ -66,11 +98,13 @@ export default function Index() {
             onChangeText={setNuevaTarea}
           />
 
-          <Button
-            title="Guardar"
-            color="#6A1B9A"
-            onPress={guardarTarea}
-          />
+          <View style={styles.botonGuardar}>
+            <Button
+              title="Guardar"
+              color="#6A1B9A"
+              onPress={guardarTarea}
+            />
+          </View>
 
         </View>
       )}
@@ -93,24 +127,90 @@ export default function Index() {
               </Text>
             </View>
 
-            <Text style={styles.textoTarea}>
-              {tarea}
-            </Text>
+            <View style={styles.contenidoTarea}>
+
+              <Text style={styles.textoTarea}>
+                {tarea}
+              </Text>
+
+              <View style={styles.botonEliminar}>
+                <Button
+                  title="Eliminar"
+                  color="#8E24AA"
+                  onPress={() => confirmarEliminar(index)}
+                />
+              </View>
+
+            </View>
 
           </View>
         ))}
 
       </View>
 
+      <Modal
+        visible={mostrarConfirmacion}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={cancelarEliminar}
+      >
+        <View style={styles.fondoModal}>
+
+          <View style={styles.modal}>
+
+            <View style={styles.iconoModal}>
+              <Text style={styles.signoPregunta}>
+                ?
+              </Text>
+            </View>
+
+            <Text style={styles.tituloModal}>
+              Eliminar tarea
+            </Text>
+
+            <Text style={styles.mensajeModal}>
+              ¿Está seguro que desea eliminar la tarea?
+            </Text>
+
+            <View style={styles.botonesModal}>
+
+              <View style={styles.botonNo}>
+                <Button
+                  title="No"
+                  color="#9575CD"
+                  onPress={cancelarEliminar}
+                />
+              </View>
+
+              <View style={styles.botonSi}>
+                <Button
+                  title="Sí"
+                  color="#6A1B9A"
+                  onPress={eliminarTarea}
+                />
+              </View>
+
+            </View>
+
+          </View>
+
+        </View>
+      </Modal>
+
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#F3E5F5',
+  },
+
+  contenido: {
     padding: 20,
+    paddingBottom: 40,
   },
 
   encabezado: {
@@ -126,7 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    textAlign: 'center',
     marginBottom: 8,
   },
 
@@ -170,6 +269,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
+  botonGuardar: {
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+
   lista: {
     marginTop: 5,
   },
@@ -190,6 +294,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderLeftWidth: 6,
     borderLeftColor: '#8E24AA',
+    elevation: 3,
   },
 
   numero: {
@@ -208,9 +313,87 @@ const styles = StyleSheet.create({
     color: '#6A1B9A',
   },
 
+  contenidoTarea: {
+    flex: 1,
+  },
+
   textoTarea: {
     fontSize: 17,
     color: '#4A148C',
-    flex: 1,
+    marginBottom: 10,
   },
+
+  botonEliminar: {
+    alignSelf: 'flex-start',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+
+  fondoModal: {
+    flex: 1,
+    backgroundColor: 'rgba(74, 20, 140, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  modal: {
+    width: '85%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#CE93D8',
+  },
+
+  iconoModal: {
+    width: 55,
+    height: 55,
+    borderRadius: 28,
+    backgroundColor: '#E1BEE7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+
+  signoPregunta: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#6A1B9A',
+  },
+
+  tituloModal: {
+    fontSize: 23,
+    fontWeight: 'bold',
+    color: '#4A148C',
+    marginBottom: 12,
+  },
+
+  mensajeModal: {
+    fontSize: 17,
+    color: '#555555',
+    textAlign: 'center',
+    marginBottom: 25,
+  },
+
+  botonesModal: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%',
+  },
+
+  botonNo: {
+    width: 100,
+    marginRight: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+
+  botonSi: {
+    width: 100,
+    marginLeft: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+
 });
